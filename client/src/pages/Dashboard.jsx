@@ -38,6 +38,7 @@ const SellerView = ({ user }) => {
     const [brand, setBrand] = useState('');
     const [category, setCategory] = useState('');
     const [countInStock, setCountInStock] = useState('');
+    const [uploading, setUploading] = useState(false);
 
     useEffect(() => {
         fetchMyProducts();
@@ -51,6 +52,30 @@ const SellerView = ({ user }) => {
             setProducts(data);
         } catch (error) {
             console.error(error);
+        }
+    };
+
+    const uploadFileHandler = async (e) => {
+        const file = e.target.files[0];
+        const formData = new FormData();
+        formData.append('image', file);
+        setUploading(true);
+
+        try {
+            const config = {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${user.token}`,
+                },
+            };
+
+            const { data } = await axios.post('http://localhost:5001/api/products/upload', formData, config);
+            setImage(data.url);
+            setUploading(false);
+        } catch (error) {
+            console.error(error);
+            setUploading(false);
+            alert('Image upload failed');
         }
     };
 
@@ -90,7 +115,23 @@ const SellerView = ({ user }) => {
                     <CardContent>
                         <form onSubmit={handleCreateProduct} className="space-y-4">
                             <Input placeholder="Product Name" value={name} onChange={(e) => setName(e.target.value)} required />
-                            <Input placeholder="Image URL" value={image} onChange={(e) => setImage(e.target.value)} required />
+                            <div className="space-y-1">
+                                <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                    Product Image
+                                </label>
+                                <Input
+                                    type="file"
+                                    onChange={uploadFileHandler}
+                                    className="cursor-pointer"
+                                />
+                                {uploading && <p className="text-xs text-muted-foreground animate-pulse">Uploading...</p>}
+                                {image && (
+                                    <div className="mt-2">
+                                        <img src={image} alt="Preview" className="h-20 w-20 object-cover rounded-md border" />
+                                        <p className="text-[10px] text-muted-foreground mt-1 truncate">{image}</p>
+                                    </div>
+                                )}
+                            </div>
                             <Input placeholder="Brand" value={brand} onChange={(e) => setBrand(e.target.value)} required />
                             <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" value={category} onChange={(e) => setCategory(e.target.value)} required>
                                 <option value="">Select Category</option>

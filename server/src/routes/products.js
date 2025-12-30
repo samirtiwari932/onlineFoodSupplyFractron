@@ -2,6 +2,9 @@ const express = require('express');
 const Product = require('../models/Product');
 const router = express.Router();
 const { protect, admin, sellerOrAdmin } = require('../middleware/authMiddleware');
+const upload = require('../middleware/uploadMiddleware');
+const cloudinary = require('../config/cloudinary');
+
 
 // @desc    Get all available product categories
 // @route   GET /api/products/categories
@@ -43,6 +46,29 @@ router.get('/seller/my-products', protect, sellerOrAdmin, async (req, res) => {
         res.json(products);
     } catch (error) {
         res.status(500).json({ message: error.message });
+    }
+});
+
+// @desc    Upload image to Cloudinary
+// @route   POST /api/products/upload
+// @access  Private/Seller/Admin
+router.post('/upload', protect, sellerOrAdmin, upload.single('image'), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ message: 'Please upload an image' });
+        }
+
+        // Convert buffer to base64
+        const fileStr = req.file.buffer.toString('base64');
+        const fileType = req.file.mimetype;
+        const uploadResponse = await cloudinary.uploader.upload(`data:${fileType};base64,${fileStr}`, {
+            folder: 'foodSupply',
+        });
+
+        res.json({ url: uploadResponse.secure_url });
+    } catch (error) {
+        console.error('Upload Error:', error);
+        res.status(500).json({ message: 'Image upload failed' });
     }
 });
 
