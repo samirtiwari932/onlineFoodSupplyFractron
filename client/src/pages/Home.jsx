@@ -99,7 +99,7 @@ const Home = () => {
                         <Card key={product._id} className="overflow-hidden hover:shadow-lg transition-shadow">
                             <CardHeader className="p-0">
                                 <img
-                                    src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?q=80&w=2670&auto=format&fit=crop"
+                                    src={product.image}
                                     alt={product.name}
                                     className="w-full h-48 object-cover"
                                 />

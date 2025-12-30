@@ -40,7 +40,7 @@ const ProductDetails = () => {
             <div className="grid md:grid-cols-2 gap-8">
                 <div>
                     <img
-                        src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?q=80&w=2670&auto=format&fit=crop"
+                        src={product.image}
                         alt={product.name}
                         className="w-full rounded-lg shadow-md"
                     />
