@@ -11,7 +11,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 // Replace with your publishable key
-const stripePromise = loadStripe('pk_test_51OurPdSBOt1wZ3wXFvxKW0izd2uO0C4Cu9uMOPNAj86SWJ2NjhMSVAwsdH2pifUDXcjfGktziF4gEaMTFw4Eo1Lz00q0aZtZbF');
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const CheckoutForm = () => {
     const stripe = useStripe();
@@ -80,7 +80,7 @@ const CheckoutForm = () => {
                 totalPrice,
             };
 
-            const { data } = await axios.post('http://localhost:5001/api/orders', orderData, config);
+            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/orders`, orderData, config);
             const clientSecret = data.clientSecret;
 
             // 2. Confirm Card Payment
@@ -106,7 +106,7 @@ const CheckoutForm = () => {
             } else {
                 if (result.paymentIntent.status === 'succeeded') {
                     // 3. Mark Order as Paid
-                    await axios.put(`http://localhost:5001/api/orders/${data.order._id}/pay`, {
+                    await axios.put(`${import.meta.env.VITE_API_URL}/orders/${data.order._id}/pay`, {
                         paymentResult: result.paymentIntent
                     }, config);
 

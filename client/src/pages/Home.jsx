@@ -23,7 +23,7 @@ const Home = () => {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const { data } = await axios.get('http://localhost:5001/api/products/categories');
+                const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/products/categories`);
                 setCategories(['All', ...data]);
             } catch (error) {
                 console.error('Error fetching categories:', error);
@@ -38,8 +38,8 @@ const Home = () => {
             try {
                 setLoading(true);
                 const url = selectedCategory === 'All'
-                    ? 'http://localhost:5001/api/products'
-                    : `http://localhost:5001/api/products?category=${selectedCategory}`;
+                    ? `${import.meta.env.VITE_API_URL}/products`
+                    : `${import.meta.env.VITE_API_URL}/products?category=${selectedCategory}`;
                 const { data } = await axios.get(url);
                 setProducts(data);
             } catch (error) {
