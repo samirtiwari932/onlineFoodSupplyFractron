@@ -1,0 +1,10 @@
+{
+    "name": "online-food-supply-fractron",
+    "private": true,
+    "version": "1.0.0",
+    "scripts": {
+        "build": "npm run build --prefix client",
+        "server": "npm start --prefix server",
+        "client": "npm run dev --prefix client"
+    }
+}
