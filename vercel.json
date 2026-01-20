@@ -6,9 +6,12 @@
             "destination": "/server/src/index.js"
         },
         {
-            "source": "/(.*)",
-            "destination": "/client/dist/$1",
-            "check": true
+            "source": "/assets/(.*)",
+            "destination": "/client/dist/assets/$1"
+        },
+        {
+            "source": "/vite.svg",
+            "destination": "/client/dist/vite.svg"
         },
         {
             "source": "/(.*)",
