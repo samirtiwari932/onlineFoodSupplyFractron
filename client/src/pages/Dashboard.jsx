@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { API_URL } from '../config';
 import { useAuth } from '../context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -48,7 +49,7 @@ const SellerView = ({ user }) => {
     const fetchMyProducts = async () => {
         try {
             const config = { headers: { Authorization: `Bearer ${user.token}` } };
-            const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/products/seller/my-products`, config);
+            const { data } = await axios.get(`${API_URL}/products/seller/my-products`, config);
             setProducts(data);
         } catch (error) {
             console.error(error);
@@ -69,7 +70,7 @@ const SellerView = ({ user }) => {
                 },
             };
 
-            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/products/upload`, formData, config);
+            const { data } = await axios.post(`${API_URL}/products/upload`, formData, config);
             setImage(data.url);
             setUploading(false);
         } catch (error) {
@@ -82,7 +83,7 @@ const SellerView = ({ user }) => {
     const fetchMyOrders = async () => {
         try {
             const config = { headers: { Authorization: `Bearer ${user.token}` } };
-            const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/orders/seller/my-orders`, config);
+            const { data } = await axios.get(`${API_URL}/orders/seller/my-orders`, config);
             setOrders(data);
         } catch (error) {
             console.error(error);
@@ -93,7 +94,7 @@ const SellerView = ({ user }) => {
         e.preventDefault();
         try {
             const config = { headers: { Authorization: `Bearer ${user.token}` } };
-            await axios.post(`${import.meta.env.VITE_API_URL}/products`, {
+            await axios.post(`${API_URL}/products`, {
                 name, price, description, image, brand, category, countInStock
             }, config);
             alert('Product created! Waiting for Admin approval.');
@@ -245,7 +246,7 @@ const AdminView = ({ user }) => {
     const fetchAllProducts = async () => {
         try {
             const config = { headers: { Authorization: `Bearer ${user.token}` } };
-            const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/products/admin/all`, config);
+            const { data } = await axios.get(`${API_URL}/products/admin/all`, config);
             setProducts(data);
         } catch (error) {
             console.error(error);
@@ -255,7 +256,7 @@ const AdminView = ({ user }) => {
     const handleApprove = async (id, status) => {
         try {
             const config = { headers: { Authorization: `Bearer ${user.token}` } };
-            await axios.put(`${import.meta.env.VITE_API_URL}/products/${id}/approve`, { isApproved: status }, config);
+            await axios.put(`${API_URL}/products/${id}/approve`, { isApproved: status }, config);
             fetchAllProducts();
         } catch (error) {
             console.error(error);
@@ -311,7 +312,7 @@ const UserView = ({ user }) => {
         const fetchMyOrders = async () => {
             try {
                 const config = { headers: { Authorization: `Bearer ${user.token}` } };
-                const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/orders/myorders`, config);
+                const { data } = await axios.get(`${API_URL}/orders/myorders`, config);
                 setOrders(data);
             } catch (error) {
                 console.error('Error fetching orders:', error);

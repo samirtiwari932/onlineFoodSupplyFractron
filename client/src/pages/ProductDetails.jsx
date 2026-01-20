@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { API_URL } from '../config';
 import { Button } from '@/components/ui/button';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -17,7 +18,7 @@ const ProductDetails = () => {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/products/${id}`);
+                const { data } = await axios.get(`${API_URL}/products/${id}`);
                 setProduct(data);
             } catch (error) {
                 console.error('Error fetching product:', error);

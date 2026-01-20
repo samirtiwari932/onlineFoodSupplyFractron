@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_URL } from '../config';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { Button } from '@/components/ui/button';
@@ -80,7 +81,7 @@ const CheckoutForm = () => {
                 totalPrice,
             };
 
-            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/orders`, orderData, config);
+            const { data } = await axios.post(`${API_URL}/orders`, orderData, config);
             const clientSecret = data.clientSecret;
 
             // 2. Confirm Card Payment
@@ -106,7 +107,7 @@ const CheckoutForm = () => {
             } else {
                 if (result.paymentIntent.status === 'succeeded') {
                     // 3. Mark Order as Paid
-                    await axios.put(`${import.meta.env.VITE_API_URL}/orders/${data.order._id}/pay`, {
+                    await axios.put(`${API_URL}/orders/${data.order._id}/pay`, {
                         paymentResult: result.paymentIntent
                     }, config);
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { API_URL } from '../config';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Link, useNavigate } from 'react-router-dom';
@@ -23,7 +24,7 @@ const Home = () => {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/products/categories`);
+                const { data } = await axios.get(`${API_URL}/products/categories`);
                 setCategories(['All', ...data]);
             } catch (error) {
                 console.error('Error fetching categories:', error);
@@ -38,8 +39,8 @@ const Home = () => {
             try {
                 setLoading(true);
                 const url = selectedCategory === 'All'
-                    ? `${import.meta.env.VITE_API_URL}/products`
-                    : `${import.meta.env.VITE_API_URL}/products?category=${selectedCategory}`;
+                    ? `${API_URL}/products`
+                    : `${API_URL}/products?category=${selectedCategory}`;
                 const { data } = await axios.get(url);
                 setProducts(data);
             } catch (error) {
