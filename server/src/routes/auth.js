@@ -14,6 +14,7 @@ const generateToken = (id) => {
 // @route   POST /api/auth/register
 // @access  Public
 router.post('/register', async (req, res) => {
+    console.log('Register request body:', { ...req.body, password: '***' });
     const { name, email, password, phone, address, role } = req.body;
 
     try {
@@ -46,6 +47,7 @@ router.post('/register', async (req, res) => {
             res.status(400).json({ message: 'Invalid user data' });
         }
     } catch (error) {
+        console.error('Registration Error:', error);
         res.status(500).json({ message: error.message });
     }
 });
@@ -54,6 +56,7 @@ router.post('/register', async (req, res) => {
 // @route   POST /api/auth/login
 // @access  Public
 router.post('/login', async (req, res) => {
+    console.log('Login request body:', { ...req.body, password: '***' });
     const { email, password } = req.body;
 
     try {
@@ -71,6 +74,7 @@ router.post('/login', async (req, res) => {
             res.status(401).json({ message: 'Invalid email or password' });
         }
     } catch (error) {
+        console.error('Login Error:', error);
         res.status(500).json({ message: error.message });
     }
 });

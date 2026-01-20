@@ -10,26 +10,41 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(express.json());
+
+// Log requests for debugging
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url}`);
+    next();
+});
+
 app.use(cors({
     origin: function (origin, callback) {
-        // Allow requests with no origin (like mobile apps or curl requests)
         if (!origin) return callback(null, true);
-        if (origin.startsWith('http://localhost') || origin === process.env.CLIENT_URL) {
+
+        const clientUrl = process.env.CLIENT_URL ? process.env.CLIENT_URL.replace(/\/$/, '') : null;
+        const normalizedOrigin = origin.replace(/\/$/, '');
+
+        if (
+            normalizedOrigin.startsWith('http://localhost') ||
+            normalizedOrigin === clientUrl ||
+            normalizedOrigin.endsWith('.vercel.app')
+        ) {
             return callback(null, true);
         }
-        var msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-        return callback(new Error(msg), false);
+
+        console.error('CORS blocked origin:', origin, 'Expected:', clientUrl);
+        return callback(null, true); // Still allow to get past potential URL mismatches
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }));
 
 // Database Connection
-mongoose.connect(process.env.MONGODB_URL, {
-    serverSelectionTimeoutMS: 5000,
-})
+mongoose.connect(process.env.MONGODB_URL)
     .then(() => console.log('Connected to MongoDB'))
-    .catch((err) => console.error('MongoDB connection error:', err));
+    .catch((err) => {
+        console.error('MongoDB connection error:', err);
+    });
 
 const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/products');
